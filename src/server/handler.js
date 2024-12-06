@@ -32,18 +32,16 @@ async function postPredictHandler(request, h) {
 
 async function getHistoriesHandler(request, h) {
   const db = new Firestore();                            
-  const predictCollection = db.collection('prediction'); 
+  const predictCollection = db.collection('predictions'); 
   const predictSnapshot = await predictCollection.get(); 
 
   const data = [];
 
   predictSnapshot.forEach((doc) => {
-      const history = {
-          id: doc.id,
-          history: doc.data()
-      };
-      data.push(history);
+      const { id, createdAt, result, suggestion } = doc.data();
+      data.push({ id, createdAt, result, suggestion });
   });
+  
 
   const response = h.response({
       status: 'success',
